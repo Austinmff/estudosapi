@@ -1,11 +1,22 @@
 package io.github.austinmff.estudosapi.model;
 
+import jakarta.persistence.*;
+
 //POJO -> Plain Old Java Object
+@Entity
+@Table(name = "produtos")
 public class Produto {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
+
+    @Column(nullable = false)
     private String nome;
+
     private String descricao;
+
+    @Column(nullable = false)
     private Double preco;
 
     public String getId() {
