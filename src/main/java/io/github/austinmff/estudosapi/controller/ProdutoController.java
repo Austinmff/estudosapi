@@ -1,49 +1,52 @@
 package io.github.austinmff.estudosapi.controller;
 
-import io.github.austinmff.estudosapi.model.Produto;
-import io.github.austinmff.estudosapi.repository.ProdutoRepository;
+import io.github.austinmff.estudosapi.dto.ProdutoRequestDTO;
+import io.github.austinmff.estudosapi.dto.ProdutoResponseDTO;
+import io.github.austinmff.estudosapi.service.ProdutoService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("produtos")
+@RequestMapping("/produtos")
 public class ProdutoController {
 
-    private ProdutoRepository produtoRepository;
+    private final ProdutoService produtoService;
 
-    public ProdutoController(ProdutoRepository produtoRepository) {
-        this.produtoRepository = produtoRepository;
+    public ProdutoController(ProdutoService produtoService) {
+        this.produtoService = produtoService;
     }
 
     @PostMapping
-    public Produto salvar(@RequestBody Produto produto){
-        return produtoRepository.save(produto);
+    public ProdutoResponseDTO salvar(@RequestBody ProdutoRequestDTO dto) {
+        return produtoService.salvar(dto);
     }
 
     @GetMapping("/{id}")
-    public Produto buscarPorId(@PathVariable String id){
-        return produtoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+    public ProdutoResponseDTO buscarPorId(@PathVariable String id) {
+        return produtoService.buscarPorId(id);
     }
 
-    @DeleteMapping("/{id}")
-    public void deletar(@PathVariable String id){
-        produtoRepository.deleteById(id);
+    @GetMapping
+    public List<ProdutoResponseDTO> listarTodos() {
+        return produtoService.listarTodos();
     }
 
     @PutMapping("/{id}")
-    public Produto atualizar(
+    public ProdutoResponseDTO atualizar(
             @PathVariable String id,
-            @RequestBody Produto produtoAtualizado) {
-
-        Produto produto = produtoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
-
-        produto.setNome(produtoAtualizado.getNome());
-        produto.setDescricao(produtoAtualizado.getDescricao());
-        produto.setPreco(produtoAtualizado.getPreco());
-
-        return produtoRepository.save(produto);
-
+            @RequestBody ProdutoRequestDTO dto) {
+        return produtoService.atualizar(id, dto);
     }
 
+    @GetMapping("/buscar")
+    public List<ProdutoResponseDTO> buscarPorNome(@RequestParam String nome) {
+        return produtoService.buscarPorNome(nome);
+    }
+
+    @DeleteMapping("/{id}")
+    public void excluir(@PathVariable String id) {
+        produtoService.excluir(id);
+    }
 }
+
