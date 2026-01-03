@@ -139,6 +139,5 @@ Frontend com Angular
 
 Testes automatizados
 
-👨‍💻 Autor
-Austin Mff
+---
 Projeto desenvolvido com foco em aprendizado contínuo e crescimento profissional.
